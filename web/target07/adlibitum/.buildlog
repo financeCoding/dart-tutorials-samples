@@ -294,3 +294,10 @@ build.dart --changed=web/out/adlibitum.dart --changed=web/out/adlibitum.html --c
 
 build.dart finished [193 ms]
 
+---
+build.dart --machine --full
+Unable to open file: /Users/adam/dart/dart-tutorials-samples/web/target07/adlibitum/packages/web_ui/component_build.dart'file:///Users/adam/dart/dart-tutorials-samples/web/target07/adlibitum/build.dart': Error: line 1 pos 1: library handler failed
+import 'package:web_ui/component_build.dart';
+^
+build.dart finished [83 ms]
+

@@ -37,3 +37,10 @@ import 'package:web_ui/component_build.dart';
 ^
 build.dart finished [60 ms]
 
+---
+build.dart --machine --full
+Unable to open file: /Users/adam/dart/dart-tutorials-samples/web/target08/drseuss/packages/web_ui/component_build.dart'file:///Users/adam/dart/dart-tutorials-samples/web/target08/drseuss/build.dart': Error: line 1 pos 1: library handler failed
+import 'package:web_ui/component_build.dart';
+^
+build.dart finished [86 ms]
+
