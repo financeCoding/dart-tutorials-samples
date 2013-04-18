@@ -1,17 +1,11 @@
 name:  tutorialsamples
 description:  A sample application
-
 environment:
-  sdk: '>=0.4.5+1.r21094 <0.4.6' # 0.4.7.1_r21548 is when all the breaking changes happened
+  sdk: '>=0.4.7+1.r21548'
 dependencies:
-  unittest: '>=0.4.5+1'
-  bot: '>=0.16.3'
-  args: '>=0.4.5+1'
-  bot_io: '>=0.20.0-dev'
-  logging: '>=0.4.5+1'
-  pathos: '>=0.4.5+1'
-  meta: '>=0.4.5+1'
-  html5lib: '>=0.4.2'
-  hop: '0.20.0+1'
+  oauth2: '>=0.4.7+1'
+  http: '>=0.4.7+1'
+  pathos: '>=0.4.7+1'
+  hop: '>=0.21.0'
   browser: any
   web_ui: any
