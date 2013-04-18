@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sourceRoot": "",
+  "sources": ["file:///Users/adam/Documents/DartEditor/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_helper.dart","file:///Users/adam/dart/dart-tutorials-samples/web/target01/helloworld/bin/helloworld.dart","file:///Users/adam/Documents/DartEditor/dart/dart-sdk/lib/_internal/compiler/implementation/lib/core_patch.dart"],
+  "names": ["static","Primitives"],
+  "mappings": "A;A;A;A;A,C,C,E,CAsJEA,yDAII;6EASA;4CAMA;qDAOJ,A;A,C,C,E,CChLF,WCgBEC,sBDdF,A;A,sB;A;A;A;A;A;;;;;;;;;;;;;;;;;A"
+}
