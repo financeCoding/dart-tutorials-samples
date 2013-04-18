@@ -39,7 +39,7 @@ void main() {
                '-o${deployFolderName}/web/target01/clickme/web/clickme.dart',
                'web/target01/clickme/web/clickme.dart']));
 
-  addAsyncTask('deploy_gh_pages', (ctx) => branchForDir(ctx, 'master', 'deploy', 'gh-pages'));
+  addAsyncTask('deploy_gh_pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
   addAsyncTask('clean', (ctx) => startProcess(ctx, 'rm', ['-rf', deployFolderName]));
 
   runHop();
