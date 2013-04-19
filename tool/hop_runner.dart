@@ -233,6 +233,17 @@ void main() {
     return completer.future;
   });
 
+  Future gitBranchPagesDelete(ctx) => startProcess(ctx, 'git', ['branch', '-D', 'gh-pages']);
+  Future gitBranchPagesCreate(ctx) => startProcess(ctx, 'git', ['branch', 'gh-pages']);
+  Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-pages']);
+
+  Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
+  Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
+  Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '.deploy/*', '.']);
+  Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
+  Future gitBranchPagesCommitFiles(ctx) => startProcess(ctx, 'git', ['commit', '-m', 'update site']);
+  Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '-f','origin', 'gh-pages:gh-pages']);
+  
   // TODO: rename 'hop_gh_pages' to 'master' and make sure that 'deploy' has been checked into the repo.
   // dart tool/hop_runner.dart --log-level all --allow-dirty
   addAsyncTask('pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
