@@ -1,4 +1,0 @@
-name: todo
-description: A procrastinator's todo app
-dependencies:
-  browser: any
