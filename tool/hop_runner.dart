@@ -235,7 +235,8 @@ void main() {
   });
 
   // TODO: rename 'hop_gh_pages' to 'master' and make sure that 'deploy' has been checked into the repo.
-  addAsyncTask('commit_gh_pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
+  // dart tool/hop_runner.dart --log-level all --allow-dirty
+  addAsyncTask('pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
   addAsyncTask('clean', (ctx) => startProcess(ctx, 'rm', ['-rf', deployFolderName]));
 
   runHop();
