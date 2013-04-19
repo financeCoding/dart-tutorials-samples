@@ -49,3 +49,8 @@ build.dart --machine --changed=web/out/convertercomponent.dart --changed=web/out
 Total time                                                   --  30 ms
 build.dart finished [752 ms]
 
+---
+build.dart --machine --changed=web/out/convertercomponent.dart --changed=web/out/convertercomponent.dart.map --...
+Total time                                                   --  29 ms
+build.dart finished [1444 ms]
+

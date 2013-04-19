@@ -76,3 +76,8 @@ build.dart --machine --changed=web/out/convertThis.html --changed=web/out/conver
 Total time                                                   --  28 ms
 build.dart finished [764 ms]
 
+---
+build.dart --machine --changed=web/out/convertThis.html --changed=web/out/convertThis.html_bootstrap.dart --cha...
+Total time                                                   --  28 ms
+build.dart finished [816 ms]
+

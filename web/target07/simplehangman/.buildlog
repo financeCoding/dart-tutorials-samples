@@ -2904,3 +2904,8 @@ build.dart --machine --changed=web/out/simplehangman.css --changed=web/out/simpl
 Total time                                                   --  28 ms
 build.dart finished [757 ms]
 
+---
+build.dart --machine --changed=web/out/simplehangman.css --changed=web/out/simplehangman.dart --changed=web/out...
+Total time                                                   --  27 ms
+build.dart finished [689 ms]
+
