@@ -196,8 +196,16 @@ void main() {
 
     web_ui.build(webUIArgs, webUIFiles).then(
         (result) {
-          startProcess(ctx, 'rsync', ['-RLr', 'web', deployFolderName]).then((rsync_result) {
+          // rsync -RLrk --include "*/" --include="packages/browser/dart.js"  --exclude "packages/***" --verbose web /tmp/bbb
+          //startProcess(ctx, 'rsync', ['-RLr', 'web', deployFolderName]).then((rsync_result) {
+          startProcess(ctx, 'rsync', ['-RLrk',
+                                      '--include=*/',
+                                      '--include=packages/browser/dart.js',
+                                      '--exclude=packages/***',
+                                      '--verbose',
+                                      'web', deployFolderName]).then((rsync_result) {
 
+                                      //  return;
             print("==========================================");
             print("rsync done");
             print("==========================================");
