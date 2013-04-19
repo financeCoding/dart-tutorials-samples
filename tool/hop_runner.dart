@@ -7,7 +7,7 @@ import 'package:hop/hop_tasks.dart';
 void main() {
   _assertKnownPath();
 
-  String deployFolderName = 'deploy';
+  String deployFolderName = '.deploy';
 
   List webUIFiles =         ['web/target06/littleben/web/littleben.html',
                              'web/target06/littleben_clock/web/littleben_clock.html',
@@ -59,8 +59,7 @@ void main() {
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Clickme</title>
-    <link rel="stylesheet" href="clickme.css">
+    <title>dart tutorials samples</title>
   </head>
   <body>
 """);
@@ -99,7 +98,7 @@ void main() {
            '-o${deployFolderName}/$file.js',
            '$file']).then((r) {
              if (r == false) {
-               print("failed on $file");
+               ctx.info("failed on $file");
              }
 
              funcRun(f);
@@ -113,15 +112,15 @@ void main() {
 
   Future<bool> dart2dart(ctx) {
 
-    print("dart2dart");
-    print("files = $files");
+    ctx.info("dart2dart");
+    ctx.info("files = $files");
     Completer completer = new Completer();
 
     List dart2dartFiles = new List.from(files);
-    print("dart2dartFiles = $dart2dartFiles");
+    ctx.info("dart2dartFiles = $dart2dartFiles");
 
     funcRun(List f) {
-      print("f = $f");
+      ctx.info("f = $f");
       if (f.length == 0) {
         completer.complete(true);
         return;
@@ -135,14 +134,14 @@ void main() {
            '-o${deployFolderName}/$file',
            '$file']).then((r) {
              if (r == false) {
-               print("failed on $file");
+               ctx.info("failed on $file");
              }
 
              funcRun(f);
            });
     };
 
-    print("dart2dartFiles = $dart2dartFiles");
+    ctx.info("dart2dartFiles = $dart2dartFiles");
     funcRun(dart2dartFiles);
 
     return completer.future;
@@ -151,7 +150,7 @@ void main() {
   Future<bool> dart2WebUI(ctx, List bootstrapFiles) {
     var completer = new Completer();
 
-    print("bootstrapFiles = ${bootstrapFiles}");
+    ctx.info("bootstrapFiles = ${bootstrapFiles}");
 
     funcRun(List f) {
       if (f.length == 0) {
@@ -167,7 +166,7 @@ void main() {
            '-o${deployFolderName}/$file',
            '$file']).then((r) {
              if (r == false) {
-               print("failed on $file");
+               ctx.info("failed on $file");
              }
 
              startProcess(ctx,
@@ -178,7 +177,7 @@ void main() {
                   '-o${deployFolderName}/$file.js',
                   '$file']).then((r) {
                     if (r == false) {
-                      print("failed on $file");
+                      ctx.info("failed on $file");
                     }
 
                     funcRun(f);
@@ -206,19 +205,19 @@ void main() {
                                       'web', deployFolderName]).then((rsync_result) {
 
                                       //  return;
-            print("==========================================");
-            print("rsync done");
-            print("==========================================");
+            ctx.info("==========================================");
+            ctx.info("rsync done");
+            ctx.info("==========================================");
             dart2js(ctx).then((dart2js_result) {
 
-              print("==========================================");
-              print("dart2js done");
-              print("==========================================");
+              ctx.info("==========================================");
+              ctx.info("dart2js done");
+              ctx.info("==========================================");
               dart2dart(ctx).then((dart2dart_result) {
 
-                print("==========================================");
-                print("dart2dart done");
-                print("==========================================");
+                ctx.info("==========================================");
+                ctx.info("dart2dart done");
+                ctx.info("==========================================");
 
                 var filesToProcess = new List();
                 result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
