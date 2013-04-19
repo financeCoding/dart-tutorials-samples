@@ -3,20 +3,9 @@ import 'dart:io';
 import 'package:web_ui/component_build.dart' as web_ui;
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
-
+// git -c diff.mnemonicprefix=false -c core.quotepath=false push -f -v origin gh-pages:gh-pages
 void main() {
   _assertKnownPath();
-
-  // All pubspec files should install the dependencies.
-
-  // Build all dart2js and dart2dart versions of target<X>/<sample_name>/web/
-
-  // If the project has web components then call build.dart
-
-  // Copy the files from the web folders to output/target<X>/<sample_name>/web/
-  //addAsyncTask('deploy', (ctx) => startProcess(ctx, 'rsync', ['-RLr', 'web', 'output/']));
-  // Call the publish gh-pages branch from hop.
-  //addAsyncTask('deploy_gh_pages', (ctx) => branchForDir(ctx, 'master', 'output/web', 'gh-pages'));
 
   String deployFolderName = 'deploy';
 
@@ -31,19 +20,7 @@ void main() {
                              'web/target08/drseuss/web/drseuss.html',
                              'web/target09/its_all_about_you/web/its_all_about_you.html'];
 
-//  List webUIFilesBootstrap = ['web/target06/littleben/web/out/littleben.html_bootstrap.dart',
-//                              'web/target06/littleben_clock/web/out/littleben_clock.html_bootstrap.dart',
-//                              'web/target06/shout/web/out/shout.html_bootstrap.dart',
-//                              'web/target06/stopwatch/web/out/stopwatch.html_bootstrap.dart',
-//                              'web/target07/adlibitum/web/out/adlibitum.html_bootstrap.dart',
-//                              'web/target07/hangman/web/out/hangman.html_bootstrap.dart',
-//                              'web/target07/simplehangman/web/out/simplehangman.html_bootstrap.dart',
-//                              'web/target08/convertthis/web/out/convertThis.html_bootstrap.dart',
-//                              'web/target08/drseuss/web/out/drseuss.html_bootstrap.dart',
-//                              'web/target09/its_all_about_you/web/out/its_all_about_you.html_bootstrap.dart'];
-
   List webUIArgs = ['--', '--no-rewrite-urls'];
-
 
   List files = ['web/target01/clickme/web/clickme.dart',
                 //'web/target01/helloworld/bin/helloworld.dart',
@@ -56,51 +33,54 @@ void main() {
                 'web/target09/portmanteaux_simple/web/portmanteaux_simple.dart'
                 ];
 
+  List buildWebUrls() {
+    var urls = new List();
 
-  // 1) build webui files
-  // 2) deploy
-  // 3) build dart2js
-  // 4) build dart2dart
-  // 5) create gh-pages
+    urls.addAll(webUIFiles.map((String u) {
+      List s = u.split('/');
+      var last = s.removeLast();
+      s.add('out');
+      s.add(last);
+      return s.join('/');
+    }).toList());
 
-  //addAsyncTask('deploy', (ctx) => startProcess(ctx, 'rsync', ['-Rr', 'web', deployFolderName]));
+    urls.addAll(files.map((String u) => u.replaceAll('.dart', '.html')).toList());
 
-//  addAsyncTask('dart2js',
-//      (ctx) {
-//
-//    Completer completer = new Completer();
-//
-//    List dart2jsFiles = new List.from(files);
-//
-//    funcRun(List f) {
-//      if (f.length == 0) {
-//        completer.complete(true);
-//        return;
-//      }
-//      var file = f.removeLast();
-//      startProcess(ctx,
-//          'dart2js',
-//          ['--output-type=js',
-//           '--verbose',
-//           '--minify',
-//           '-o${deployFolderName}/$file.js',
-//           '$file']).then((r) {
-//             if (r == false) {
-//               print("failed on $file");
-//             }
-//
-//             funcRun(f);
-//           });
-//    };
-//
-//    funcRun(dart2jsFiles);
-//
-//    return completer.future;
-//  });
+    return urls;
+  }
 
+
+  writeIndexFile() {
+    StringBuffer sb = new StringBuffer();
+    sb.write(
+"""
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Clickme</title>
+    <link rel="stylesheet" href="clickme.css">
+  </head>
+  <body>
+""");
+
+    buildWebUrls()
+    ..sort()
+    ..forEach((u) {
+      sb.writeln("<a href='$u'>$u</a><br>");
+    });
+
+    sb.write(
+"""  </body>
+</html>
+""");
+
+    File indexFile = new File('${deployFolderName}/index.html');
+    indexFile.writeAsStringSync(sb.toString());
+  }
 
   Future<bool> dart2js(ctx) {
-
     Completer completer = new Completer();
 
     List dart2jsFiles = new List.from(files);
@@ -168,40 +148,6 @@ void main() {
     return completer.future;
   }
 
-
-//  addAsyncTask('dart2dart',
-//      (ctx) {
-//
-//    Completer completer = new Completer();
-//
-//    List dart2dartFiles = new List.from(files);
-//
-//    funcRun(List f) {
-//      if (f.length == 0) {
-//        completer.complete(true);
-//        return;
-//      }
-//      var file = f.removeLast();
-//      startProcess(ctx,
-//          'dart2js',
-//          ['--output-type=dart',
-//           '--verbose',
-//           '--minify',
-//           '-o${deployFolderName}/$file',
-//           '$file']).then((r) {
-//             if (r == false) {
-//               print("failed on $file");
-//             }
-//
-//             funcRun(f);
-//           });
-//    };
-//
-//    funcRun(dart2dartFiles);
-//
-//    return completer.future;
-//  });
-
   Future<bool> dart2WebUI(ctx, List bootstrapFiles) {
     var completer = new Completer();
 
@@ -266,9 +212,10 @@ void main() {
                 print("dart2dart done");
                 print("==========================================");
 
-                List filesToProcess = new List();
+                var filesToProcess = new List();
                 result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
                 dart2WebUI(ctx, filesToProcess).then((dart2WebUI_results) {
+                  writeIndexFile();
                   completer.complete(true);
                 });
               });
