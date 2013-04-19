@@ -31,16 +31,16 @@ void main() {
                              'web/target08/drseuss/web/drseuss.html',
                              'web/target09/its_all_about_you/web/its_all_about_you.html'];
 
-  List webUIFilesBootstrap = ['web/target06/littleben/web/out/littleben.html_bootstrap.dart',
-                              'web/target06/littleben_clock/web/out/littleben_clock.html_bootstrap.dart',
-                              'web/target06/shout/web/out/shout.html_bootstrap.dart',
-                              'web/target06/stopwatch/web/out/stopwatch.html_bootstrap.dart',
-                              'web/target07/adlibitum/web/out/adlibitum.html_bootstrap.dart',
-                              'web/target07/hangman/web/out/hangman.html_bootstrap.dart',
-                              'web/target07/simplehangman/web/out/simplehangman.html_bootstrap.dart',
-                              'web/target08/convertthis/web/out/convertThis.html_bootstrap.dart',
-                              'web/target08/drseuss/web/out/drseuss.html_bootstrap.dart',
-                              'web/target09/its_all_about_you/web/out/its_all_about_you.html_bootstrap.dart'];
+//  List webUIFilesBootstrap = ['web/target06/littleben/web/out/littleben.html_bootstrap.dart',
+//                              'web/target06/littleben_clock/web/out/littleben_clock.html_bootstrap.dart',
+//                              'web/target06/shout/web/out/shout.html_bootstrap.dart',
+//                              'web/target06/stopwatch/web/out/stopwatch.html_bootstrap.dart',
+//                              'web/target07/adlibitum/web/out/adlibitum.html_bootstrap.dart',
+//                              'web/target07/hangman/web/out/hangman.html_bootstrap.dart',
+//                              'web/target07/simplehangman/web/out/simplehangman.html_bootstrap.dart',
+//                              'web/target08/convertthis/web/out/convertThis.html_bootstrap.dart',
+//                              'web/target08/drseuss/web/out/drseuss.html_bootstrap.dart',
+//                              'web/target09/its_all_about_you/web/out/its_all_about_you.html_bootstrap.dart'];
 
   List webUIArgs = ['--', '--no-rewrite-urls'];
 
@@ -63,40 +63,40 @@ void main() {
   // 4) build dart2dart
   // 5) create gh-pages
 
-  addAsyncTask('deploy', (ctx) => startProcess(ctx, 'rsync', ['-Rr', 'web', deployFolderName]));
+  //addAsyncTask('deploy', (ctx) => startProcess(ctx, 'rsync', ['-Rr', 'web', deployFolderName]));
 
-  addAsyncTask('dart2js',
-      (ctx) {
-
-    Completer completer = new Completer();
-
-    List dart2jsFiles = new List.from(files);
-
-    funcRun(List f) {
-      if (f.length == 0) {
-        completer.complete(true);
-        return;
-      }
-      var file = f.removeLast();
-      startProcess(ctx,
-          'dart2js',
-          ['--output-type=js',
-           '--verbose',
-           '--minify',
-           '-o${deployFolderName}/$file.js',
-           '$file']).then((r) {
-             if (r == false) {
-               print("failed on $file");
-             }
-
-             funcRun(f);
-           });
-    };
-
-    funcRun(dart2jsFiles);
-
-    return completer.future;
-  });
+//  addAsyncTask('dart2js',
+//      (ctx) {
+//
+//    Completer completer = new Completer();
+//
+//    List dart2jsFiles = new List.from(files);
+//
+//    funcRun(List f) {
+//      if (f.length == 0) {
+//        completer.complete(true);
+//        return;
+//      }
+//      var file = f.removeLast();
+//      startProcess(ctx,
+//          'dart2js',
+//          ['--output-type=js',
+//           '--verbose',
+//           '--minify',
+//           '-o${deployFolderName}/$file.js',
+//           '$file']).then((r) {
+//             if (r == false) {
+//               print("failed on $file");
+//             }
+//
+//             funcRun(f);
+//           });
+//    };
+//
+//    funcRun(dart2jsFiles);
+//
+//    return completer.future;
+//  });
 
 
   Future<bool> dart2js(ctx) {
@@ -169,12 +169,43 @@ void main() {
   }
 
 
-  addAsyncTask('dart2dart',
-      (ctx) {
+//  addAsyncTask('dart2dart',
+//      (ctx) {
+//
+//    Completer completer = new Completer();
+//
+//    List dart2dartFiles = new List.from(files);
+//
+//    funcRun(List f) {
+//      if (f.length == 0) {
+//        completer.complete(true);
+//        return;
+//      }
+//      var file = f.removeLast();
+//      startProcess(ctx,
+//          'dart2js',
+//          ['--output-type=dart',
+//           '--verbose',
+//           '--minify',
+//           '-o${deployFolderName}/$file',
+//           '$file']).then((r) {
+//             if (r == false) {
+//               print("failed on $file");
+//             }
+//
+//             funcRun(f);
+//           });
+//    };
+//
+//    funcRun(dart2dartFiles);
+//
+//    return completer.future;
+//  });
 
-    Completer completer = new Completer();
+  Future<bool> dart2WebUI(ctx, List bootstrapFiles) {
+    var completer = new Completer();
 
-    List dart2dartFiles = new List.from(files);
+    print("bootstrapFiles = ${bootstrapFiles}");
 
     funcRun(List f) {
       if (f.length == 0) {
@@ -193,21 +224,32 @@ void main() {
                print("failed on $file");
              }
 
-             funcRun(f);
+             startProcess(ctx,
+                 'dart2js',
+                 ['--output-type=js',
+                  '--verbose',
+                  '--minify',
+                  '-o${deployFolderName}/$file.js',
+                  '$file']).then((r) {
+                    if (r == false) {
+                      print("failed on $file");
+                    }
+
+                    funcRun(f);
+                  });
            });
     };
 
-    funcRun(dart2dartFiles);
+    funcRun(new List.from(bootstrapFiles));
 
     return completer.future;
-  });
+  }
 
-  addAsyncTask('web_ui_build', (ctx) {
+  addAsyncTask('build_gh_pages', (ctx) {
     var completer = new Completer();
 
     web_ui.build(webUIArgs, webUIFiles).then(
         (result) {
-
           startProcess(ctx, 'rsync', ['-RLr', 'web', deployFolderName]).then((rsync_result) {
 
             print("==========================================");
@@ -220,79 +262,25 @@ void main() {
               print("==========================================");
               dart2dart(ctx).then((dart2dart_result) {
 
-
                 print("==========================================");
                 print("dart2dart done");
                 print("==========================================");
 
-
-          print("result = $result");
-//web/target09/its_all_about_you/web/out/its_all_about_you.dart.map = null
-//web/target09/its_all_about_you/web/out/its_all_about_you.html_bootstrap.dart = null
-//web/target09/its_all_about_you/web/out/its_all_about_you.html = web/target09/its_all_about_you/web/its_all_about_you.html
-
-          // collect the bootstrap files here.
-
-          List filesToProcess = new List();
-
-          result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
-
-          print("filesToProcess = ${filesToProcess}");
-
-
-
-          funcRun(List f) {
-            if (f.length == 0) {
-              completer.complete(true);
-              return;
-            }
-            var file = f.removeLast();
-            startProcess(ctx,
-                'dart2js',
-                ['--output-type=dart',
-                 '--verbose',
-                 '--minify',
-                 '-o${deployFolderName}/$file',
-                 '$file']).then((r) {
-                   if (r == false) {
-                     print("failed on $file");
-                   }
-
-                   startProcess(ctx,
-                       'dart2js',
-                       ['--output-type=js',
-                        '--verbose',
-                        '--minify',
-                        '-o${deployFolderName}/$file.js',
-                        '$file']).then((r) {
-                          if (r == false) {
-                            print("failed on $file");
-                          }
-
-                          funcRun(f);
-                        });
-
-                   //funcRun(f);
-                 });
-          };
-
-          funcRun(new List.from(filesToProcess));
-
-          //completer.complete(true);
-
-          });
-
-
+                List filesToProcess = new List();
+                result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
+                dart2WebUI(ctx, filesToProcess).then((dart2WebUI_results) {
+                  completer.complete(true);
+                });
+              });
             });
           });
-
         });
 
     return completer.future;
   });
 
   // TODO: rename 'hop_gh_pages' to 'master' and make sure that 'deploy' has been checked into the repo.
-  addAsyncTask('deploy_gh_pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
+  addAsyncTask('commit_gh_pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
   addAsyncTask('clean', (ctx) => startProcess(ctx, 'rm', ['-rf', deployFolderName]));
 
   runHop();

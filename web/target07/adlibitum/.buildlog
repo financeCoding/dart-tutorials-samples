@@ -301,3 +301,8 @@ import 'package:web_ui/component_build.dart';
 ^
 build.dart finished [83 ms]
 
+---
+build.dart --machine --changed=web/out/adlibitum.css --changed=web/out/adlibitum.dart --changed=web/out/adlibit...
+Total time                                                   --  26 ms
+build.dart finished [774 ms]
+

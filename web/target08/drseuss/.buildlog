@@ -44,3 +44,8 @@ import 'package:web_ui/component_build.dart';
 ^
 build.dart finished [86 ms]
 
+---
+build.dart --machine --changed=web/out/convertercomponent.dart --changed=web/out/convertercomponent.dart.map --...
+Total time                                                   --  30 ms
+build.dart finished [752 ms]
+
