@@ -1,0 +1,1 @@
+import "dart:html" as h;class l{final  name;const l(this.name);} main(){h.query("#sample_text_id")..text="Click me!"..onClick.listen(k);} k( m){var i=h.query("#sample_text_id").text;var j=new StringBuffer();for(int g=i.length-1;g>=0;g-- ){j.write(i[g]);}h.query("#sample_text_id").text=j.toString();}//@ sourceMappingURL=clickme.dart.map
