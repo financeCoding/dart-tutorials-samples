@@ -7,7 +7,6 @@ import 'package:hop/hop_tasks.dart';
 String deployFolderName = '.deploy';
 String workingBranch = 'hop_gh_pages';
 
-  
 List webUIFiles = ['web/target06/littleben/web/littleben.html',
                    'web/target06/littleben_clock/web/littleben_clock.html',
                    'web/target06/shout/web/shout.html',
@@ -30,7 +29,6 @@ List files = ['web/target01/clickme/web/clickme.dart',
               'web/target04/todo_with_delete/web/todo_with_delete.dart',
               'web/target09/portmanteaux/web/portmanteaux.dart',
               'web/target09/portmanteaux_simple/web/portmanteaux_simple.dart'];
-
 
 Future gitBranchPagesDelete(ctx) => startProcess(ctx, 'git', ['branch', '-D', 'gh-pages']);
 Future gitBranchPagesCreate(ctx) => startProcess(ctx, 'git', ['branch', 'gh-pages']);
