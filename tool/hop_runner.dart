@@ -11,7 +11,8 @@ Future gitBranchPagesDelete(ctx) => startProcess(ctx, 'git', ['branch', '-D', 'g
 Future gitBranchPagesCreate(ctx) => startProcess(ctx, 'git', ['branch', 'gh-pages']);
 Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-pages']);
 
-Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
+Future gitBranchPagesDeleteFilesGit(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
+Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'rm', ['-rf', 'web', 'packages', 'tool']);
 Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
 Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '${deployFolderName}/index.html', '${deployFolderName}/web', '.']);
 Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
@@ -238,17 +239,19 @@ void main() {
                   gitBranchPagesDelete(ctx).then((r) {
                     gitBranchPagesCreate(ctx).then((r) {
                       gitBranchPagesCheckout(ctx).then((r) {
-                        gitBranchPagesDeleteFiles(ctx).then((r) {
-                          gitBranchPagesCopyFiles(ctx).then((r) {
-                            gitBranchPagesAddFiles(ctx).then((r) {
-                              gitBranchPagesCommitFiles(ctx).then((r) {
-                                gitBranchPagesPushFiles(ctx).then((r) {
-                                  completer.complete(true);
+                        gitBranchPagesDeleteFilesGit(ctx).then((r) {
+                          gitBranchPagesDeleteFiles(ctx).then((r) {
+                            gitBranchPagesCopyFiles(ctx).then((r) {
+                              gitBranchPagesAddFiles(ctx).then((r) {
+                                gitBranchPagesCommitFiles(ctx).then((r) {
+                                  gitBranchPagesPushFiles(ctx).then((r) {
+                                    completer.complete(true);
+                                    });
                                   });
                                 });
                               });
                             });
-                          });
+                           });
                         });
                       });
                     });                  
