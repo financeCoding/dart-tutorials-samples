@@ -212,16 +212,12 @@ void main() {
 
     web_ui.build(webUIArgs, webUIFiles).then(
         (result) {
-          // rsync -RLrk --include "*/" --include="packages/browser/dart.js"  --exclude "packages/***" --verbose web /tmp/bbb
-          //startProcess(ctx, 'rsync', ['-RLr', 'web', deployFolderName]).then((rsync_result) {
           startProcess(ctx, 'rsync', ['-RLrk',
                                       '--include=*/',
                                       '--include=packages/browser/dart.js',
                                       '--exclude=packages/***',
                                       '--verbose',
                                       'web', deployFolderName]).then((rsync_result) {
-
-                                      //  return;
             ctx.info("==========================================");
             ctx.info("rsync done");
             ctx.info("==========================================");
@@ -239,19 +235,84 @@ void main() {
                 var filesToProcess = new List();
                 result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
                 dart2WebUI(ctx, filesToProcess).then((dart2WebUI_results) {
+                  ctx.info("==========================================");
+                  ctx.info("dart2WebUI done");
+                  ctx.info("=========================================="); 
+                                   
                   writeIndexFile();
+
                   gitBranchPagesDelete(ctx).then((r) {
+
+                    ctx.info("==========================================");
+                    ctx.info("gitBranchPagesDelete done");
+                    ctx.info("=========================================="); 
+
                     gitBranchPagesCreate(ctx).then((r) {
+
+                      ctx.info("==========================================");
+                      ctx.info("gitBranchPagesCreate done");
+                      ctx.info("=========================================="); 
+
                       gitBranchPagesCheckout(ctx).then((r) {
+
+                        ctx.info("==========================================");
+                        ctx.info("gitBranchPagesCheckout done");
+                        ctx.info("=========================================="); 
+
                         gitBranchPagesDeleteFilesGit(ctx).then((r) {
+
+                          ctx.info("==========================================");
+                          ctx.info("gitBranchPagesDeleteFilesGit done");
+                          ctx.info("=========================================="); 
+
                           gitBranchPagesDeleteFiles(ctx).then((r) {
+
+                            ctx.info("==========================================");
+                            ctx.info("gitBranchPagesDeleteFiles done");
+                            ctx.info("=========================================="); 
+
                             gitBranchPagesCopyFiles(ctx).then((r) {
+
+                              ctx.info("==========================================");
+                              ctx.info("gitBranchPagesCopyFiles done");
+                              ctx.info("=========================================="); 
+
                               gitBranchPagesAddFiles(ctx).then((r) {
+
+                                ctx.info("==========================================");
+                                ctx.info("gitBranchPagesAddFiles done");
+                                ctx.info("=========================================="); 
+
                                 gitBranchPagesCommitFiles(ctx).then((r) {
+
+                                  ctx.info("==========================================");
+                                  ctx.info("gitBranchPagesCommitFiles done");
+                                  ctx.info("=========================================="); 
+
                                   gitBranchPagesPushFiles(ctx).then((r) {
+
+                                    ctx.info("==========================================");
+                                    ctx.info("gitBranchPagesPushFiles done");
+                                    ctx.info("=========================================="); 
+
                                     gitBranchPagesCheckoutMainBranch(ctx).then((r) {
+
+                                      ctx.info("==========================================");
+                                      ctx.info("gitBranchPagesCheckoutMainBranch done");
+                                      ctx.info("=========================================="); 
+
                                       gitBranchPagesResetHard(ctx).then((r) {
+
+                                        ctx.info("==========================================");
+                                        ctx.info("gitBranchPagesResetHard done");
+                                        ctx.info("=========================================="); 
+
                                         gitBranchPagesPubUpdate(ctx).then((r) {
+
+                                          ctx.info("==========================================");
+                                          ctx.info("gitBranchPagesPubUpdate done");
+                                          ctx.info("=========================================="); 
+
                                           completer.complete(true);
                                           });
                                         });
@@ -274,9 +335,7 @@ void main() {
     return completer.future;
   });
 
-  // TODO: rename 'hop_gh_pages' to 'master' and make sure that 'deploy' has been checked into the repo.
   // dart tool/hop_runner.dart --log-level all --allow-dirty
-  addAsyncTask('pages', (ctx) => branchForDir(ctx, workingBranch, 'deploy', 'gh-pages'));
   addAsyncTask('clean', (ctx) => startProcess(ctx, 'rm', ['-rf', deployFolderName]));
 
   runHop();
