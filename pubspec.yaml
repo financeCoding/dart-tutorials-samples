@@ -8,4 +8,6 @@ dependencies:
   pathos: '>=0.4.7+1'
   hop: '>=0.21.0'
   browser: any
-  web_ui: any
+  web_ui:
+    git: https://github.com/dart-lang/web-ui.git
+#  web_ui: any
