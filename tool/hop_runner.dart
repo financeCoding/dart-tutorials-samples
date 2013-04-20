@@ -11,7 +11,7 @@ Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-
 
 Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
 Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
-Future gitBranchPagesMoveFiles(ctx) => startProcess(ctx, 'mv', ['.deploy/*', '.']);
+Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '.deploy/*', '.']);
 Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
 Future gitBranchPagesCommitFiles(ctx) => startProcess(ctx, 'git', ['commit', '-m', 'update site']);
 Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '-f','origin', 'gh-pages:gh-pages']);
@@ -239,7 +239,7 @@ void main() {
                     gitBranchPagesCreate(ctx).then((r) {
                       gitBranchPagesCheckout(ctx).then((r) {
                         gitBranchPagesDeleteFiles(ctx).then((r) {
-                          gitBranchPagesMoveFiles(ctx).then((r) {
+                          gitBranchPagesCopyFiles(ctx).then((r) {
                             gitBranchPagesAddFiles(ctx).then((r) {
                               gitBranchPagesCommitFiles(ctx).then((r) {
                                 gitBranchPagesPushFiles(ctx).then((r) {
