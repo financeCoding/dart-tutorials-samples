@@ -5,21 +5,21 @@ import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 // git -c diff.mnemonicprefix=false -c core.quotepath=false push -f -v origin gh-pages:gh-pages
 
+String deployFolderName = '.deploy';
+
 Future gitBranchPagesDelete(ctx) => startProcess(ctx, 'git', ['branch', '-D', 'gh-pages']);
 Future gitBranchPagesCreate(ctx) => startProcess(ctx, 'git', ['branch', 'gh-pages']);
 Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-pages']);
 
 Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
 Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
-Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', 'deploy/*', '.']);
+Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '${deployFolderName}/index.html', '${deployFolderName}/web', '.']);
 Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
 Future gitBranchPagesCommitFiles(ctx) => startProcess(ctx, 'git', ['commit', '-m', 'update site']);
 Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '-f','origin', 'gh-pages:gh-pages']);
     
 void main() {
   _assertKnownPath();
-
-  String deployFolderName = 'deploy';
 
   List webUIFiles =         ['web/target06/littleben/web/littleben.html',
                              'web/target06/littleben_clock/web/littleben_clock.html',
