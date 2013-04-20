@@ -11,7 +11,7 @@ Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-
 
 Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
 Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
-Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '.deploy/*', '.']);
+Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', 'deploy/*', '.']);
 Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
 Future gitBranchPagesCommitFiles(ctx) => startProcess(ctx, 'git', ['commit', '-m', 'update site']);
 Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '-f','origin', 'gh-pages:gh-pages']);
@@ -19,7 +19,7 @@ Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '
 void main() {
   _assertKnownPath();
 
-  String deployFolderName = '.deploy';
+  String deployFolderName = 'deploy';
 
   List webUIFiles =         ['web/target06/littleben/web/littleben.html',
                              'web/target06/littleben_clock/web/littleben_clock.html',
