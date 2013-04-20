@@ -6,18 +6,22 @@ import 'package:hop/hop_tasks.dart';
 // git -c diff.mnemonicprefix=false -c core.quotepath=false push -f -v origin gh-pages:gh-pages
 
 String deployFolderName = '.deploy';
+String workingBranch = 'hop_gh_pages';
 
 Future gitBranchPagesDelete(ctx) => startProcess(ctx, 'git', ['branch', '-D', 'gh-pages']);
 Future gitBranchPagesCreate(ctx) => startProcess(ctx, 'git', ['branch', 'gh-pages']);
 Future gitBranchPagesCheckout(ctx) => startProcess(ctx, 'git', ['checkout', 'gh-pages']);
-
 Future gitBranchPagesDeleteFilesGit(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '*']);
 Future gitBranchPagesDeleteFiles(ctx) => startProcess(ctx, 'rm', ['-rf', 'web', 'packages', 'tool']);
 Future gitBranchPagesDeleteGitIgnore(ctx) => startProcess(ctx, 'git', ['rm', '-rf', '.gitignore']);
 Future gitBranchPagesCopyFiles(ctx) => startProcess(ctx, 'cp', ['-r', '${deployFolderName}/index.html', '${deployFolderName}/web', '.']);
 Future gitBranchPagesAddFiles(ctx) => startProcess(ctx, 'git', ['add', '.']);
 Future gitBranchPagesCommitFiles(ctx) => startProcess(ctx, 'git', ['commit', '-m', 'update site']);
-Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-v', '-f','origin', 'gh-pages:gh-pages']);
+Future gitBranchPagesPushFiles(ctx) => startProcess(ctx, 'git', ['push', '-f','origin', 'gh-pages:gh-pages']);
+Future gitBranchPagesCheckoutMainBranch(ctx) => startProcess(ctx, 'git', ['checkout', workingBranch]);
+Future gitBranchPagesResetHard(ctx) => startProcess(ctx, 'git', ['reset', '--hard']);
+Future gitBranchPagesPubUpdate(ctx) => startProcess(ctx, 'pub', ['update']);
+
     
 void main() {
   _assertKnownPath();
@@ -245,7 +249,13 @@ void main() {
                               gitBranchPagesAddFiles(ctx).then((r) {
                                 gitBranchPagesCommitFiles(ctx).then((r) {
                                   gitBranchPagesPushFiles(ctx).then((r) {
-                                    completer.complete(true);
+                                    gitBranchPagesCheckoutMainBranch(ctx).then((r) {
+                                      gitBranchPagesResetHard(ctx).then((r) {
+                                        gitBranchPagesPubUpdate(ctx).then((r) {
+                                          completer.complete(true);
+                                          });
+                                        });
+                                      });
                                     });
                                   });
                                 });
@@ -266,7 +276,7 @@ void main() {
 
   // TODO: rename 'hop_gh_pages' to 'master' and make sure that 'deploy' has been checked into the repo.
   // dart tool/hop_runner.dart --log-level all --allow-dirty
-  addAsyncTask('pages', (ctx) => branchForDir(ctx, 'hop_gh_pages', 'deploy', 'gh-pages'));
+  addAsyncTask('pages', (ctx) => branchForDir(ctx, workingBranch, 'deploy', 'gh-pages'));
   addAsyncTask('clean', (ctx) => startProcess(ctx, 'rm', ['-rf', deployFolderName]));
 
   runHop();
