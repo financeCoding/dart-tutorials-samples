@@ -220,13 +220,13 @@ buildPages(ctx) {
   List webUiFilesResults;
 
   return web_ui.build(webUIArgs, webUIFiles).then((result) {
+    webUiFilesResults = result;
     return startProcess(ctx, 'rsync', ['-RLrk',
                                 '--include=*/',
                                 '--include=packages/browser/dart.js',
                                 '--exclude=packages/***',
                                 '--verbose',
                                 'web', deployFolderName]);
-    webUiFilesResults = result;
   }).then((rsync_result) {
     return dart2js(ctx);
   }).then((dart2js_result) {
