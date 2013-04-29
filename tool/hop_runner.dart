@@ -250,7 +250,7 @@ buildPages(ctx) {
     ctx.info("dart2dart_result = ${dart2dart_result}");
     ctx.info(barSeparator);
     var filesToProcess = new List();
-    result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) =>
+    webUiFilesResults.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) =>
         f.endsWith("_bootstrap.dart"))));
     return dart2WebUI(ctx, filesToProcess);
   }).then((dart2WebUI_results) {
