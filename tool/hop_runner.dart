@@ -217,6 +217,7 @@ Future<bool> dart2WebUI(ctx, List bootstrapFiles) {
 buildPages(ctx) {
   ctx.info("executing buildPages");
   //var completer = new Completer();
+  List webUiFilesResults;
 
   return web_ui.build(webUIArgs, webUIFiles).then((result) {
     return startProcess(ctx, 'rsync', ['-RLrk',
@@ -225,6 +226,7 @@ buildPages(ctx) {
                                 '--exclude=packages/***',
                                 '--verbose',
                                 'web', deployFolderName]);
+    webUiFilesResults = result;
   }).then((rsync_result) {
     return dart2js(ctx);
   }).then((dart2js_result) {
@@ -263,158 +265,158 @@ buildPages(ctx) {
     return true;
   });
 
-/*
-  web_ui.build(webUIArgs, webUIFiles).then(
-      (result) {
 
-        ctx.info("==========================================");
-        ctx.info("result = ${result}");
-        ctx.info("web_ui.build done");
-        ctx.info("==========================================");
+  // web_ui.build(webUIArgs, webUIFiles).then(
+  //     (result) {
 
-        startProcess(ctx, 'rsync', ['-RLrk',
-                                    '--include=*/',
-                                    '--include=packages/browser/dart.js',
-                                    '--exclude=packages/***',
-                                    '--verbose',
-                                    'web', deployFolderName]).then((rsync_result) {
+  //       ctx.info("==========================================");
+  //       ctx.info("result = ${result}");
+  //       ctx.info("web_ui.build done");
+  //       ctx.info("==========================================");
 
-          ctx.info("==========================================");
-          ctx.info("result = ${rsync_result}");
-          ctx.info("rsync done");
-          ctx.info("==========================================");
+  //       startProcess(ctx, 'rsync', ['-RLrk',
+  //                                   '--include=*/',
+  //                                   '--include=packages/browser/dart.js',
+  //                                   '--exclude=packages/***',
+  //                                   '--verbose',
+  //                                   'web', deployFolderName]).then((rsync_result) {
 
-          dart2js(ctx).then((dart2js_result) {
+  //         ctx.info("==========================================");
+  //         ctx.info("result = ${rsync_result}");
+  //         ctx.info("rsync done");
+  //         ctx.info("==========================================");
 
-            ctx.info("==========================================");
-            ctx.info("result = ${dart2js_result}");
-            ctx.info("dart2js done");
-            ctx.info("==========================================");
+  //         dart2js(ctx).then((dart2js_result) {
 
-            dart2dart(ctx).then((dart2dart_result) {
+  //           ctx.info("==========================================");
+  //           ctx.info("result = ${dart2js_result}");
+  //           ctx.info("dart2js done");
+  //           ctx.info("==========================================");
 
-              ctx.info("==========================================");
-              ctx.info("result = ${dart2dart_result}");
-              ctx.info("dart2dart done");
-              ctx.info("==========================================");
+  //           dart2dart(ctx).then((dart2dart_result) {
 
-              var filesToProcess = new List();
-              result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
+  //             ctx.info("==========================================");
+  //             ctx.info("result = ${dart2dart_result}");
+  //             ctx.info("dart2dart done");
+  //             ctx.info("==========================================");
 
-              dart2WebUI(ctx, filesToProcess).then((dart2WebUI_results) {
+  //             var filesToProcess = new List();
+  //             result.forEach((o) => filesToProcess.addAll(o.outputs.keys.where((f) => f.endsWith("_bootstrap.dart"))));
 
-                ctx.info("==========================================");
-                ctx.info("result = ${dart2WebUI_results}");
-                ctx.info("dart2WebUI done");
-                ctx.info("==========================================");
+  //             dart2WebUI(ctx, filesToProcess).then((dart2WebUI_results) {
 
-                writeIndexFile();
+  //               ctx.info("==========================================");
+  //               ctx.info("result = ${dart2WebUI_results}");
+  //               ctx.info("dart2WebUI done");
+  //               ctx.info("==========================================");
 
-                gitBranchPagesDelete(ctx).then((r) {
+  //               writeIndexFile();
 
-                  ctx.info("==========================================");
-                  ctx.info("result = ${r}");
-                  ctx.info("gitBranchPagesDelete done");
-                  ctx.info("==========================================");
+  //               gitBranchPagesDelete(ctx).then((r) {
 
-                  gitBranchPagesCreate(ctx).then((r) {
+  //                 ctx.info("==========================================");
+  //                 ctx.info("result = ${r}");
+  //                 ctx.info("gitBranchPagesDelete done");
+  //                 ctx.info("==========================================");
 
-                    ctx.info("==========================================");
-                    ctx.info("result = ${r}");
-                    ctx.info("gitBranchPagesCreate done");
-                    ctx.info("==========================================");
+  //                 gitBranchPagesCreate(ctx).then((r) {
 
-                    gitBranchPagesCheckout(ctx).then((r) {
+  //                   ctx.info("==========================================");
+  //                   ctx.info("result = ${r}");
+  //                   ctx.info("gitBranchPagesCreate done");
+  //                   ctx.info("==========================================");
 
-                      ctx.info("==========================================");
-                      ctx.info("result = ${r}");
-                      ctx.info("gitBranchPagesCheckout done");
-                      ctx.info("==========================================");
+  //                   gitBranchPagesCheckout(ctx).then((r) {
 
-                      gitBranchPagesDeleteFilesGit(ctx).then((r) {
+  //                     ctx.info("==========================================");
+  //                     ctx.info("result = ${r}");
+  //                     ctx.info("gitBranchPagesCheckout done");
+  //                     ctx.info("==========================================");
 
-                        ctx.info("==========================================");
-                        ctx.info("result = ${r}");
-                        ctx.info("gitBranchPagesDeleteFilesGit done");
-                        ctx.info("==========================================");
+  //                     gitBranchPagesDeleteFilesGit(ctx).then((r) {
 
-                        gitBranchPagesDeleteFiles(ctx).then((r) {
+  //                       ctx.info("==========================================");
+  //                       ctx.info("result = ${r}");
+  //                       ctx.info("gitBranchPagesDeleteFilesGit done");
+  //                       ctx.info("==========================================");
 
-                          ctx.info("==========================================");
-                          ctx.info("result = ${r}");
-                          ctx.info("gitBranchPagesDeleteFiles done");
-                          ctx.info("==========================================");
+  //                       gitBranchPagesDeleteFiles(ctx).then((r) {
 
-                          gitBranchPagesCopyFiles(ctx).then((r) {
+  //                         ctx.info("==========================================");
+  //                         ctx.info("result = ${r}");
+  //                         ctx.info("gitBranchPagesDeleteFiles done");
+  //                         ctx.info("==========================================");
 
-                            ctx.info("==========================================");
-                            ctx.info("result = ${r}");
-                            ctx.info("gitBranchPagesCopyFiles done");
-                            ctx.info("==========================================");
+  //                         gitBranchPagesCopyFiles(ctx).then((r) {
 
-                            gitBranchPagesAddFiles(ctx).then((r) {
+  //                           ctx.info("==========================================");
+  //                           ctx.info("result = ${r}");
+  //                           ctx.info("gitBranchPagesCopyFiles done");
+  //                           ctx.info("==========================================");
 
-                              ctx.info("==========================================");
-                              ctx.info("result = ${r}");
-                              ctx.info("gitBranchPagesAddFiles done");
-                              ctx.info("==========================================");
+  //                           gitBranchPagesAddFiles(ctx).then((r) {
 
-                              gitBranchPagesCommitFiles(ctx).then((r) {
+  //                             ctx.info("==========================================");
+  //                             ctx.info("result = ${r}");
+  //                             ctx.info("gitBranchPagesAddFiles done");
+  //                             ctx.info("==========================================");
 
-                                ctx.info("==========================================");
-                                ctx.info("result = ${r}");
-                                ctx.info("gitBranchPagesCommitFiles done");
-                                ctx.info("==========================================");
+  //                             gitBranchPagesCommitFiles(ctx).then((r) {
 
-                                gitBranchPagesPushFiles(ctx).then((r) {
+  //                               ctx.info("==========================================");
+  //                               ctx.info("result = ${r}");
+  //                               ctx.info("gitBranchPagesCommitFiles done");
+  //                               ctx.info("==========================================");
 
-                                  ctx.info("==========================================");
-                                  ctx.info("result = ${r}");
-                                  ctx.info("gitBranchPagesPushFiles done");
-                                  ctx.info("==========================================");
+  //                               gitBranchPagesPushFiles(ctx).then((r) {
 
-                                  gitBranchPagesCheckoutMainBranch(ctx).then((r) {
+  //                                 ctx.info("==========================================");
+  //                                 ctx.info("result = ${r}");
+  //                                 ctx.info("gitBranchPagesPushFiles done");
+  //                                 ctx.info("==========================================");
 
-                                    ctx.info("==========================================");
-                                    ctx.info("result = ${r}");
-                                    ctx.info("gitBranchPagesCheckoutMainBranch done");
-                                    ctx.info("==========================================");
+  //                                 gitBranchPagesCheckoutMainBranch(ctx).then((r) {
 
-                                    gitBranchPagesResetHard(ctx).then((r) {
+  //                                   ctx.info("==========================================");
+  //                                   ctx.info("result = ${r}");
+  //                                   ctx.info("gitBranchPagesCheckoutMainBranch done");
+  //                                   ctx.info("==========================================");
 
-                                      ctx.info("==========================================");
-                                      ctx.info("result = ${r}");
-                                      ctx.info("gitBranchPagesResetHard done");
-                                      ctx.info("==========================================");
+  //                                   gitBranchPagesResetHard(ctx).then((r) {
 
-                                      gitBranchPagesPubUpdate(ctx).then((r) {
+  //                                     ctx.info("==========================================");
+  //                                     ctx.info("result = ${r}");
+  //                                     ctx.info("gitBranchPagesResetHard done");
+  //                                     ctx.info("==========================================");
 
-                                        ctx.info("==========================================");
-                                        ctx.info("result = ${r}");
-                                        ctx.info("gitBranchPagesPubUpdate done");
-                                        ctx.info("==========================================");
+  //                                     gitBranchPagesPubUpdate(ctx).then((r) {
 
-                                        completer.complete(true);
-                                      });
-                                    });
-                                  });
-                                });
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
+  //                                       ctx.info("==========================================");
+  //                                       ctx.info("result = ${r}");
+  //                                       ctx.info("gitBranchPagesPubUpdate done");
+  //                                       ctx.info("==========================================");
 
-  return completer.future;
-  */
+  //                                       completer.complete(true);
+  //                                     });
+  //                                   });
+  //                                 });
+  //                               });
+  //                             });
+  //                           });
+  //                         });
+  //                       });
+  //                     });
+  //                   });
+  //                 });
+  //               });
+  //             });
+  //           });
+  //         });
+  //       });
+  //     });
+
+  // return completer.future;
+  
 }
 
 void main() {
